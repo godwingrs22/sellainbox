@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
-import com.estimote.sdk.EstimoteSDK;
 
 import it.sellainbox.fragment.AnnouncementFragment;
 import it.sellainbox.fragment.EventsFragment;
@@ -79,11 +78,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        EstimoteSDK.initialize(this, "sellainbox", "a3a31c5ea67310d8dc70f5e45b23c735");
-
-        EstimoteSDK.enableDebugLogging(true);
-
 
 //        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //        beaconManager = new BeaconManager(this);

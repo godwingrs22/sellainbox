@@ -56,6 +56,7 @@ public class AnnouncementActivity extends AppCompatActivity {
 //                notification_url = ServerConfig.getNotificationURL() + "/" + beaconId + "?userCode=GBS02286";
 //            }
 //        }
+
         notification_url = ServerConfig.getNotificationURL() + "/" + BeaconsMonitoringService.getBeaconId() + "?userCode=GBS02286";
 //        notification_url = ServerConfig.getNotificationURL();
         Log.e(TAG, "<----Notification URL---->" + notification_url);
