@@ -113,39 +113,42 @@ public class AnnouncementActivity extends AppCompatActivity {
             final JSONObject device = response.getJSONObject("device");
             final String location = device.getString("location");
 
-            postNotification(location);
-
             JSONArray announcements = response.getJSONArray("announcements");
-            for (int i = 0; i < announcements.length(); i++) {
-                JSONObject announcementJSON = (JSONObject) announcements.get(i);
-                JSONObject createdBy = (JSONObject) announcementJSON.get("createdBy");
-                Announcement announcement = new Announcement();
-                announcement.setId(announcementJSON.getInt("id"));
-                announcement.setCreatedByName(createdBy.getString("name"));
-                announcement.setProfileImage(ServerConfig.getServerURL() + createdBy.getString("image"));
-                announcement.setStartTimestamp(announcementJSON.getString("startTimeStamp"));
-                String url = announcementJSON.isNull("url") ? null : announcementJSON.getString("url");
-                announcement.setUrl(url);
-                JSONArray messages = announcementJSON.getJSONArray("messages");
-                for (int j = 0; j < messages.length(); j++) {
-                    JSONObject messagesJSON = (JSONObject) messages.get(j);
+            if (announcements != null) {
 
-                    Announcement messageAnnouncement = new Announcement();
-                    messageAnnouncement.setId(announcement.getId());
-                    messageAnnouncement.setCreatedByName(announcement.getCreatedByName());
-                    messageAnnouncement.setProfileImage(announcement.getProfileImage());
-                    messageAnnouncement.setStartTimestamp(announcement.getStartTimestamp());
-                    messageAnnouncement.setUrl(announcement.getUrl());
-                    String content = messagesJSON.isNull("content") ? null : messagesJSON.getString("content");
-                    messageAnnouncement.setMessage(content);
-                    String image = messagesJSON.isNull("image") ? null : ServerConfig.getServerURL() + messagesJSON.getString("image");
-                    messageAnnouncement.setImage(image);
-                    announcementList.add(messageAnnouncement);
-                }
+                postNotification(location);
+
+                for (int i = 0; i < announcements.length(); i++) {
+                    JSONObject announcementJSON = (JSONObject) announcements.get(i);
+                    JSONObject createdBy = (JSONObject) announcementJSON.get("createdBy");
+                    Announcement announcement = new Announcement();
+                    announcement.setId(announcementJSON.getInt("id"));
+                    announcement.setCreatedByName(createdBy.getString("name"));
+                    announcement.setProfileImage(ServerConfig.getServerURL() + createdBy.getString("image"));
+                    announcement.setStartTimestamp(announcementJSON.getString("startTimeStamp"));
+                    String url = announcementJSON.isNull("url") ? null : announcementJSON.getString("url");
+                    announcement.setUrl(url);
+                    JSONArray messages = announcementJSON.getJSONArray("messages");
+                    for (int j = 0; j < messages.length(); j++) {
+                        JSONObject messagesJSON = (JSONObject) messages.get(j);
+
+                        Announcement messageAnnouncement = new Announcement();
+                        messageAnnouncement.setId(announcement.getId());
+                        messageAnnouncement.setCreatedByName(announcement.getCreatedByName());
+                        messageAnnouncement.setProfileImage(announcement.getProfileImage());
+                        messageAnnouncement.setStartTimestamp(announcement.getStartTimestamp());
+                        messageAnnouncement.setUrl(announcement.getUrl());
+                        String content = messagesJSON.isNull("content") ? null : messagesJSON.getString("content");
+                        messageAnnouncement.setMessage(content);
+                        String image = messagesJSON.isNull("image") ? null : ServerConfig.getServerURL() + messagesJSON.getString("image");
+                        messageAnnouncement.setImage(image);
+                        announcementList.add(messageAnnouncement);
+                    }
 //                announcementList.add(announcement);
+                }
             }
-            announcementListAdapter.notifyDataSetChanged();
 
+            announcementListAdapter.notifyDataSetChanged();
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -5,9 +5,9 @@ package it.sellainbox.connection;
  */
 public class ServerConfig {
     private final static String HTTP_PROTOCOL = "http";
-    private final static String HOSTNAME = "192.168.0.129";
+    private final static String HOSTNAME = "192.168.0.100";
     private final static String PORT_NO = "8080";
-    private final static String NOTIFICATION_API = "/biot/notifications";
+    private final static String NOTIFICATION_API = "/biot/rest/notifications";
     private final static String IMAGE_API = "/biot/static/images/";
 
     public static String getServerURL() {
