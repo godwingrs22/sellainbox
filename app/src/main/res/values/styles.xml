@@ -18,6 +18,17 @@
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
+    <style name="WindowTheme" parent="AppTheme">
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:windowBackground">@color/md_white_1000</item>
+        <item name="android:background">@color/md_white_1000</item>
+    </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Dialog.MinWidth">
+        <item name="android:background">@color/md_indigo_500</item>
+    </style>
+
     <style name="LoginTextTheme" parent="Widget.AppCompat.EditText">
         <item name="colorControlNormal">@android:color/white</item>
     </style>

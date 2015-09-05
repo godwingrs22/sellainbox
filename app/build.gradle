@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23"
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "it.sellainbox"
@@ -10,12 +10,20 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
     }
 }
 
@@ -26,17 +34,18 @@ repositories {
     }
 }
 
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.0.0'
-    compile 'com.android.support:cardview-v7:23.0.0'
-    compile 'com.android.support:recyclerview-v7:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:cardview-v7:23.0.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.google.android.gms:play-services:7.5.0'
-    compile 'com.android.support:design:23.0.0'
+    compile 'com.android.support:design:23.0.1'
     compile 'me.zhanghai.android.materialprogressbar:library:1.0.2'
-    compile 'org.apache.httpcomponents:httpmime:4.2.3'
-    compile 'org.apache.httpcomponents:httpcore:4.4.1'
     compile 'de.hdodenhof:circleimageview:1.2.1'
     compile(name:'estimote-sdk', ext:'aar')
     compile(name:'volley', ext:'jar')
+    compile(name:'httpclient-4.4.1', ext:'jar')
+    compile(name:'httpcore-4.4.1', ext:'jar')
 }

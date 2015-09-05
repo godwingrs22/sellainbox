@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import it.sellainbox.cache.SellaCache;
+
 /**
  * Created by GodwinRoseSamuel on 14-06-2015.
  */
@@ -29,8 +31,15 @@ public class SplashScreen extends Activity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
-                    Intent i = new Intent(getApplicationContext(), LogInActivity.class);
-                    startActivity(i);
+                    final String userCode = SellaCache.getCache("userCode", "0", getApplicationContext());
+                    if (userCode != null && !userCode.equalsIgnoreCase("") && !userCode.equalsIgnoreCase("0")) {
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(i);
+                    } else {
+                        Intent i = new Intent(getApplicationContext(), LogInActivity.class);
+                        startActivity(i);
+                    }
+
                 }
             }
         };

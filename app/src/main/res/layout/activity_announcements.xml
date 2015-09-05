@@ -3,72 +3,97 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:minHeight="1000dp"
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:padding="@dimen/padding_large_16dp">
+        android:layout_height="0dp"
+        android:layout_weight="0.80"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        <LinearLayout
+            android:id="@+id/welcome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_medium_10dp"
-            android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            card_view:cardCornerRadius="4dp"
-            card_view:cardElevation="4dp"
-            card_view:contentPadding="@dimen/padding_medium_10dp">
+            android:layout_gravity="top"
+            android:padding="@dimen/padding_large_16dp">
 
-            <LinearLayout
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="4dp"
+                card_view:contentPadding="@dimen/padding_medium_10dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:theme="@style/WindowTheme">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingRight="@dimen/padding_large_30dp">
+
+                        <TextView
+                            android:id="@+id/welcomeText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start|center"
+                            android:text="Welcome"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/md_text" />
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/welcomeText"
+                        android:id="@+id/welcomeUser"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start|center"
-                        android:text="Welcome"
+                        android:layout_weight="1"
+                        android:text="Sella"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/md_text" />
-
+                        android:textColor="@android:color/black" />
                 </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/welcomeUser"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center"
-                    android:layout_weight="1"
-                    android:text="Sella"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@android:color/black" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/announcementListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/padding_large_16dp"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="0.20">
 
-        <ListView
-            android:id="@+id/announcementListView"
+        <it.sellainbox.cache.SellaImageLoader
+            android:id="@+id/locationMap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@null" />
-
+            android:background="@drawable/locationmap"
+            android:scaleType="fitXY"
+            android:visibility="visible" />
     </LinearLayout>
 </LinearLayout>

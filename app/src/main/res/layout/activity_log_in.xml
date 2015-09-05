@@ -30,54 +30,38 @@
             android:hint="GBS ID"
             android:padding="10dp"
             android:singleLine="true"
-            android:text="GBS02286"
+            android:text=""
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@android:color/white"
             android:textColorHint="#cccccc"
             android:theme="@style/LoginTextTheme" />
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="PASSWORD"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:text="123456789"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textColor="@android:color/white"
-            android:textColorHint="#cccccc"
-            android:theme="@style/LoginTextTheme" />
+        <!--<EditText-->
+            <!--android:id="@+id/password"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:hint="PASSWORD"-->
+            <!--android:inputType="textPassword"-->
+            <!--android:padding="10dp"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="123456789"-->
+            <!--android:textAppearance="@style/TextAppearance.AppCompat.Body2"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:textColorHint="#cccccc"-->
+            <!--android:theme="@style/LoginTextTheme" />-->
 
         <Button
-            android:id="@+id/btnSignIn"
+            android:id="@+id/register"
             style="@style/customButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:padding="10dp"
-            android:text="Sign In"
+            android:text="Register"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="OR"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@android:color/white" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/googleSignIn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="20dp" />
 
 </LinearLayout>

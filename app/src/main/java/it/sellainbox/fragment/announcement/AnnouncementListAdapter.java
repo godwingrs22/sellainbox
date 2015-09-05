@@ -19,6 +19,7 @@ import java.util.List;
 
 import it.sellainbox.AppController;
 import it.sellainbox.R;
+import it.sellainbox.cache.SellaImageLoader;
 
 /**
  * Created by GodwinRoseSamuel on 09-08-2015.
@@ -68,7 +69,7 @@ public class AnnouncementListAdapter extends BaseAdapter {
         TextView message = (TextView) convertView.findViewById(R.id.message);
         TextView url = (TextView) convertView.findViewById(R.id.url);
         NetworkImageView profileImage = (NetworkImageView) convertView.findViewById(R.id.profileImage);
-        AnnouncementImageView announcementImageView = (AnnouncementImageView) convertView.findViewById(R.id.imageView);
+        SellaImageLoader sellaImageLoader = (SellaImageLoader) convertView.findViewById(R.id.imageView);
 
         Announcement item = announcementList.get(position);
 
@@ -95,9 +96,9 @@ public class AnnouncementListAdapter extends BaseAdapter {
         profileImage.setImageUrl(item.getProfileImage(), imageLoader);
 
         if (item.getImage() != null) {
-            announcementImageView.setImageUrl(item.getImage(), imageLoader);
-            announcementImageView.setVisibility(View.VISIBLE);
-            announcementImageView.setResponseObserver(new AnnouncementImageView.ResponseObserver() {
+            sellaImageLoader.setImageUrl(item.getImage(), imageLoader);
+            sellaImageLoader.setVisibility(View.VISIBLE);
+            sellaImageLoader.setResponseObserver(new SellaImageLoader.ResponseObserver() {
                 @Override
                 public void onError() {
                 }
@@ -107,7 +108,7 @@ public class AnnouncementListAdapter extends BaseAdapter {
                 }
             });
         } else {
-            announcementImageView.setVisibility(View.GONE);
+            sellaImageLoader.setVisibility(View.GONE);
         }
 
         return convertView;

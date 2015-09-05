@@ -5,8 +5,12 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +33,12 @@ import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import it.sellainbox.cache.SellaCache;
 import it.sellainbox.fragment.AnnouncementFragment;
 import it.sellainbox.fragment.EventsFragment;
 import it.sellainbox.fragment.InBoxFragment;
@@ -60,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private static ImageView userPhoto;
     private static ImageView coverLayout;
 
+    private static Context context;
+
     AnnouncementFragment announcementFragment = new AnnouncementFragment();
     EventsFragment eventsFragment = new EventsFragment();
     InBoxFragment inBoxFragment = new InBoxFragment();
@@ -78,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = getApplicationContext();
 
 //        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //        beaconManager = new BeaconManager(this);
@@ -135,15 +148,54 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static Handler LoadUserProfileHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            userName.setText(SellaCache.getCache("userName", "", context));
+            userEmail.setText(SellaCache.getCache("userCode", "", context));
+            Log.e(TAG,"LoaduserprofileHandler"+userName+"/"+userEmail+"/"+SellaCache.getCache("userProfileImage", "", context));
+            new LoadProfileImage(userPhoto).execute(SellaCache.getCache("userProfileImage", "", context));
+        }
+    };
+
+    private static class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
+
+        ImageView downloadImage;
+
+        public LoadProfileImage(ImageView imageView) {
+            this.downloadImage = imageView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            String url = urls[0];
+            Bitmap icon = null;
+            try {
+                InputStream inputStream = new URL(url).openStream();
+                icon = BitmapFactory.decodeStream(inputStream);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return icon;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            downloadImage.setImageBitmap(bitmap);
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if device supports Bluetooth Low Energy.
         if (!AppController.getInstance().getBeaconManager().hasBluetooth()) {
             Toast.makeText(this, "Device does not have Bluetooth Low Energy", Toast.LENGTH_LONG).show();
             return;
         }
-        // If Bluetooth is not enabled, let user enable it.
         if (!AppController.getInstance().getBeaconManager().isBluetoothEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -289,21 +341,22 @@ public class MainActivity extends AppCompatActivity {
                             drawerLayout.closeDrawer(GravityCompat.START);
                             menuItem.setChecked(true);
                             break;
-//                        case R.id.item_navigation_drawer_dashboard:
-//                            fragmentTransaction.replace(R.id.content_frame, dashBoardFragment).commit();
+                        case R.id.item_navigation_drawer_sellaOfferta:
+                            drawerLayout.closeDrawer(GravityCompat.START);
+                            menuItem.setChecked(true);
+                            Intent sellaOffertaIntent = navigationView.getContext().getPackageManager().getLaunchIntentForPackage("it.sella.sellaofferta");
+                            navigationView.getContext().startActivity(sellaOffertaIntent);
+                            break;
+//                        case R.id.item_navigation_drawer_Inbox:
+//                            fragmentTransaction.replace(R.id.content_frame, inBoxFragment).commit();
 //                            drawerLayout.closeDrawer(GravityCompat.START);
 //                            menuItem.setChecked(true);
 //                            break;
-                        case R.id.item_navigation_drawer_Inbox:
-                            fragmentTransaction.replace(R.id.content_frame, inBoxFragment).commit();
-                            drawerLayout.closeDrawer(GravityCompat.START);
-                            menuItem.setChecked(true);
-                            break;
-                        case R.id.item_navigation_drawer_Events:
-                            fragmentTransaction.replace(R.id.content_frame, announcementFragment).commit();
-                            drawerLayout.closeDrawer(GravityCompat.START);
-                            menuItem.setChecked(true);
-                            break;
+//                        case R.id.item_navigation_drawer_Events:
+//                            fragmentTransaction.replace(R.id.content_frame, announcementFragment).commit();
+//                            drawerLayout.closeDrawer(GravityCompat.START);
+//                            menuItem.setChecked(true);
+//                            break;
                         case R.id.item_navigation_drawer_about:
                             drawerLayout.closeDrawer(GravityCompat.START);
                             new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
@@ -335,16 +388,14 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.item_navigation_drawer_rateus:
                             drawerLayout.closeDrawer(GravityCompat.START);
                             menuItem.setChecked(true);
-                            try {
-                                Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PLAY_STORE_URL));
-                                navigationView.getContext().startActivity(rateIntent);
-                            } catch (ActivityNotFoundException e) {
-                                Toast.makeText(navigationView.getContext(), "No browser is installed", Toast.LENGTH_LONG);
-                            }
+                            Intent feedbackIntent = new Intent(getApplicationContext(), FeedbackActivity.class);
+                            startActivity(feedbackIntent);
                             break;
-                        case R.id.item_navigation_drawer_account_settings:
+                        case R.id.item_navigation_drawer_device_settings:
                             drawerLayout.closeDrawer(GravityCompat.START);
                             menuItem.setChecked(true);
+                            Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                            startActivity(settingsIntent);
                             break;
                         case R.id.item_navigation_drawer_contact_us:
                             drawerLayout.closeDrawer(GravityCompat.START);

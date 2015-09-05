@@ -7,12 +7,13 @@
             android:checked="true"
             android:icon="@mipmap/ic_notifications_active_black_48dp"
             android:title="Announcement" />
-        <!--<item-->
-            <!--android:id="@+id/item_navigation_drawer_dashboard"-->
-            <!--android:checked="true"-->
-            <!--android:icon="@mipmap/ic_dashboard_black_48dp"-->
-            <!--android:title="DashBoard" />-->
+
         <item
+            android:id="@+id/item_navigation_drawer_sellaOfferta"
+            android:checked="true"
+            android:icon="@mipmap/ic_person_black_48dp"
+            android:title="SellaOfferta" />
+        <!--<item
             android:id="@+id/item_navigation_drawer_Inbox"
             android:checked="true"
             android:icon="@mipmap/ic_inbox_black_48dp"
@@ -21,14 +22,14 @@
             android:id="@+id/item_navigation_drawer_Events"
             android:checked="true"
             android:icon="@mipmap/ic_event_black_48dp"
-            android:title="Events" />
+            android:title="Events" /> -->
     </group>
     <item android:title="Settings">
         <menu>
             <item
-                android:id="@+id/item_navigation_drawer_account_settings"
-                android:icon="@mipmap/ic_person_black_48dp"
-                android:title="Profile" />
+                android:id="@+id/item_navigation_drawer_device_settings"
+                android:icon="@mipmap/ic_settings_black_48dp"
+                android:title="Settings" />
         </menu>
     </item>
     <item android:title="Support">
@@ -38,13 +39,13 @@
                 android:icon="@mipmap/ic_info_black_48dp"
                 android:title="About" />
             <item
-                android:id="@+id/item_navigation_drawer_share"
-                android:icon="@mipmap/ic_share_black_48dp"
-                android:title="Share" />
-            <item
                 android:id="@+id/item_navigation_drawer_rateus"
                 android:icon="@mipmap/ic_star_half_black_48dp"
                 android:title="Rate Us" />
+            <item
+                android:id="@+id/item_navigation_drawer_share"
+                android:icon="@mipmap/ic_share_black_48dp"
+                android:title="Share" />
             <item
                 android:id="@+id/item_navigation_drawer_contact_us"
                 android:icon="@mipmap/ic_email_black_48dp"

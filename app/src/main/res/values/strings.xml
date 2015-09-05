@@ -10,6 +10,9 @@
     <string name="Visible">Get Visible</string>
     <string name="List">List Devices</string>
     <string name="title_activity_log_in">LogIn</string>
+    <string name="title_activity_setting_in">Settings</string>
+    <string name="title_activity_feedback">FeedBack</string>
+
         
     <string name="connection_title">Select Mode</string>
     <string name="action_logout">Logout</string>

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
@@ -27,6 +29,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.sellainbox.cache.SellaCache;
+import it.sellainbox.cache.SellaImageLoader;
 import it.sellainbox.connection.ServerConfig;
 import it.sellainbox.fragment.announcement.Announcement;
 import it.sellainbox.fragment.announcement.AnnouncementListAdapter;
@@ -44,25 +48,23 @@ public class AnnouncementActivity extends AppCompatActivity {
     private Cache cache;
     private String notification_url;
     private TextView welcomeUser;
+    private SellaImageLoader locationMapView;
+    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announcements);
-//        Bundle extras = getIntent().getExtras();
-//        if (extras != null) {
-//            final String beaconId = extras.getString("BEACON_ID");
-//            if (beaconId != null) {
-//                notification_url = ServerConfig.getNotificationURL() + "/" + beaconId + "?userCode=GBS02286";
-//            }
-//        }
 
-        notification_url = ServerConfig.getNotificationURL() + "/" + BeaconsMonitoringService.getBeaconId() + "?userCode=GBS02286";
-//        notification_url = ServerConfig.getNotificationURL();
+        String userCode = SellaCache.getCache("userCode", "0", getApplicationContext());
+        if (userCode != null) {
+            notification_url = ServerConfig.getNotificationURL(getApplicationContext()) + "/" + BeaconsMonitoringService.getBeaconId() + "?userCode=" + userCode;
+        }
         Log.e(TAG, "<----Notification URL---->" + notification_url);
 
         welcomeUser = (TextView) findViewById(R.id.welcomeUser);
         announcementListView = (ListView) findViewById(R.id.announcementListView);
+        locationMapView = (SellaImageLoader) findViewById(R.id.locationMap);
 
         announcementList = new ArrayList<Announcement>();
 
@@ -74,6 +76,7 @@ public class AnnouncementActivity extends AppCompatActivity {
             try {
                 String data = new String(entry.data, "UTF-8");
                 try {
+                    Log.e(TAG, "cache response" + data);
                     parseJsonFeed(new JSONObject(data));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -89,6 +92,7 @@ public class AnnouncementActivity extends AppCompatActivity {
                 public void onResponse(JSONObject response) {
                     VolleyLog.d(TAG, "Response: " + response.toString());
                     if (response != null) {
+                        Log.e(TAG, "new response" + response.toString());
                         parseJsonFeed(response);
                     }
                 }
@@ -106,14 +110,29 @@ public class AnnouncementActivity extends AppCompatActivity {
 
     private void parseJsonFeed(JSONObject response) {
         try {
+            Log.e(TAG, "response" + response.toString());
             final JSONObject user = response.getJSONObject("user");
             final String name = user.getString("name");
             welcomeUser.setText(name);
 
             final JSONObject device = response.getJSONObject("device");
             final String location = device.getString("location");
+            final String locationMap = ServerConfig.getServerURL(getApplicationContext()) + device.getString("locationMap");
+
+            locationMapView.setImageUrl(locationMap, imageLoader);
+            locationMapView.setVisibility(View.VISIBLE);
+            locationMapView.setResponseObserver(new SellaImageLoader.ResponseObserver() {
+                @Override
+                public void onError() {
+                }
+
+                @Override
+                public void onSuccess() {
+                }
+            });
 
             JSONArray announcements = response.getJSONArray("announcements");
+
             if (announcements != null) {
 
                 postNotification(location);
@@ -124,11 +143,12 @@ public class AnnouncementActivity extends AppCompatActivity {
                     Announcement announcement = new Announcement();
                     announcement.setId(announcementJSON.getInt("id"));
                     announcement.setCreatedByName(createdBy.getString("name"));
-                    announcement.setProfileImage(ServerConfig.getServerURL() + createdBy.getString("image"));
+                    announcement.setProfileImage(ServerConfig.getServerURL(getApplicationContext()) + createdBy.getString("image"));
                     announcement.setStartTimestamp(announcementJSON.getString("startTimeStamp"));
                     String url = announcementJSON.isNull("url") ? null : announcementJSON.getString("url");
                     announcement.setUrl(url);
                     JSONArray messages = announcementJSON.getJSONArray("messages");
+
                     for (int j = 0; j < messages.length(); j++) {
                         JSONObject messagesJSON = (JSONObject) messages.get(j);
 
@@ -140,7 +160,7 @@ public class AnnouncementActivity extends AppCompatActivity {
                         messageAnnouncement.setUrl(announcement.getUrl());
                         String content = messagesJSON.isNull("content") ? null : messagesJSON.getString("content");
                         messageAnnouncement.setMessage(content);
-                        String image = messagesJSON.isNull("image") ? null : ServerConfig.getServerURL() + messagesJSON.getString("image");
+                        String image = messagesJSON.isNull("image") ? null : ServerConfig.getServerURL(getApplicationContext()) + messagesJSON.getString("image");
                         messageAnnouncement.setImage(image);
                         announcementList.add(messageAnnouncement);
                     }
@@ -149,6 +169,8 @@ public class AnnouncementActivity extends AppCompatActivity {
             }
 
             announcementListAdapter.notifyDataSetChanged();
+
+            SellaCache.putCache("beaconId", String.valueOf(BeaconsMonitoringService.getBeaconId()), getApplicationContext());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -174,7 +196,12 @@ public class AnnouncementActivity extends AppCompatActivity {
         notificationManager.cancel(2);
         notificationManager.notify(1, notification);
 
-        Toast.makeText(this, "You have entered into " + location, Toast.LENGTH_LONG).show();
-
+        Toast toast = Toast.makeText(this, "You have entered into " + location, Toast.LENGTH_LONG);
+        View view = toast.getView();
+        TextView text = (TextView) view.findViewById(android.R.id.message);
+        text.setBackgroundColor(getResources().getColor(R.color.md_white_1000));
+        text.getBackground().setAlpha(0);
+        toast.setView(view);
+        toast.show();
     }
 }
